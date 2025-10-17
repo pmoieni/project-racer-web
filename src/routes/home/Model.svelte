@@ -1,28 +1,19 @@
-<script lang="ts" module>
+<script lang="ts">
+	import { AnimController, type AnimConfig, type AnimNode } from '$lib/animation';
 	import Zzeit from '$lib/models/Zzeit.svelte';
 	import { T, useThrelte } from '@threlte/core';
+	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { Tween } from 'svelte/motion';
 	import { DoubleSide, type PerspectiveCamera } from 'three';
 
-	const { renderer } = useThrelte();
-
-	export interface AnimConfig {
-		dirLight: {
-			position: { x: number; y: number; z: number };
-			intensity: number;
-		};
-		camera: {
-			fov: number;
-			position: { x: number; y: number; z: number };
-			lookAt?: { x: number; y: number; z: number };
-		};
-		model: {
-			rotation: { x: number; y: number; z: number };
-		};
-		duration: number;
-		isStoppable: boolean;
+	interface Props {
+		animState: 'next' | 'prev';
 	}
+
+	const { animState }: Props = $props();
+
+	const { renderer } = useThrelte();
 
 	// camera
 	let camera: PerspectiveCamera | undefined = $state();
@@ -40,12 +31,181 @@
 	let dLightPosY = new Tween(0);
 	let dLightPosZ = new Tween(-10);
 
-	export async function applyState(config: AnimConfig) {
-		const dLight = config.dirLight;
-		const cam = config.camera;
-		const model = config.model;
+	interface StepProps {
+		dirLight: {
+			position: { x: number; y: number; z: number };
+			intensity: number;
+		};
+		camera: {
+			fov: number;
+			position: { x: number; y: number; z: number };
+			lookAt?: { x: number; y: number; z: number };
+		};
+		model: {
+			rotation: { x: number; y: number; z: number };
+		};
+		duration: number;
+	}
 
-		const options = { duration: config.duration, easing: cubicOut };
+	const steps: AnimConfig<StepProps>[] = [
+		// lights on
+		{
+			props: {
+				dirLight: {
+					position: { x: 0, y: 10, z: -10 },
+					intensity: 0
+				},
+				camera: {
+					fov: 20,
+					position: { x: 0, y: 1, z: 12 },
+					lookAt: { x: 0, y: 1, z: 0 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 2000
+			},
+			isStoppable: false
+		},
+		// lights stay on
+		{
+			props: {
+				dirLight: {
+					position: { x: 0, y: 10, z: -10 },
+					intensity: 1
+				},
+				camera: {
+					fov: 20,
+					position: { x: 0, y: 1, z: 12 },
+					lookAt: { x: 0, y: 1, z: 0 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 2000
+			},
+			isStoppable: true
+		},
+		// lights off
+		{
+			props: {
+				dirLight: {
+					position: { x: 0, y: 10, z: -10 },
+					intensity: 0
+				},
+				camera: {
+					fov: 20,
+					position: { x: 0, y: 1, z: 12 }
+					// lookAt: { x: 2, y: 0, z: 0 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 1500
+			},
+			isStoppable: false
+		},
+		// rotate slightly towards headlights with increased fov
+		{
+			props: {
+				dirLight: {
+					position: { x: -10, y: 5, z: 3 },
+					intensity: 0
+				},
+				camera: {
+					fov: 20,
+					position: { x: 4, y: 1, z: 10 },
+					lookAt: { x: -2, y: 1, z: 2 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 500
+			},
+			isStoppable: false
+		},
+		// lights on and rotate towards headlights
+		{
+			props: {
+				dirLight: {
+					position: { x: 10, y: 10, z: 3 },
+					intensity: 5
+				},
+				camera: {
+					fov: 20,
+					position: { x: 5, y: 1, z: 10 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 2500
+			},
+			isStoppable: true
+		},
+		// rotate more while turning the lights off
+		{
+			props: {
+				dirLight: {
+					position: { x: -10, y: 5, z: 3 },
+					intensity: 0
+				},
+				camera: {
+					fov: 20,
+					position: { x: 5, y: 1, z: 8 },
+					lookAt: { x: 5, y: 1, z: 10 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 1500
+			},
+			isStoppable: false
+		},
+		// move towards rear lights
+		{
+			props: {
+				dirLight: {
+					position: { x: 5, y: 10, z: 3 },
+					intensity: 8
+				},
+				camera: {
+					fov: 20,
+					position: { x: 0, y: 1.5, z: -12 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 4000
+			},
+			isStoppable: true
+		},
+		// slowly turn lights off
+		{
+			props: {
+				dirLight: {
+					position: { x: 0, y: 5, z: 5 },
+					intensity: 0
+				},
+				camera: {
+					fov: 15,
+					position: { x: 0, y: 1.5, z: -12 },
+					lookAt: { x: 0, y: 1, z: 0 }
+				},
+				model: {
+					rotation: { x: 0, y: 0, z: 0 }
+				},
+				duration: 2500
+			},
+			isStoppable: false
+		}
+	];
+
+	export const applyState = async (config: AnimConfig<StepProps>) => {
+		const dLight = config.props.dirLight;
+		const cam = config.props.camera;
+		const model = config.props.model;
+
+		const options = { duration: config.props.duration, easing: cubicOut };
 
 		await Promise.all([
 			dLightPosX.set(dLight.position.x, { ...options }),
@@ -62,80 +222,7 @@
 		]);
 
 		if (camera && cam.lookAt) camera.lookAt(cam.lookAt.x, cam.lookAt.y, cam.lookAt.z);
-	}
-
-	export interface AnimNode {
-		config: AnimConfig;
-		next: AnimNode | null;
-		prev: AnimNode | null;
-	}
-
-	export class AnimController {
-		private animHead: AnimNode | null = null;
-
-		constructor() {}
-
-		getLastNode(node: AnimNode): AnimNode {
-			return node.next ? this.getLastNode(node.next) : node;
-		}
-
-		insertNode(config: AnimConfig) {
-			let node: AnimNode = { config, next: null, prev: null };
-
-			if (!this.animHead) {
-				this.animHead = node;
-				return;
-			}
-
-			const lastNode = this.getLastNode(this.animHead);
-			node.prev = lastNode;
-			lastNode.next = node;
-		}
-
-		insertNodeAtStart(config: AnimConfig) {
-			let node: AnimNode = { config, next: null, prev: null };
-
-			if (!this.animHead) {
-				this.animHead = node;
-				return;
-			}
-
-			this.animHead.prev = node;
-			node.next = this.animHead;
-			this.animHead = node;
-		}
-
-		deleteNode(node: AnimNode) {
-			if (!node.prev) {
-				this.animHead = node.next;
-				return;
-			}
-
-			const prevNode = node.prev;
-			prevNode.next = node.next;
-		}
-
-		private async apply(node: AnimNode) {
-			const config = node.config;
-			await applyState(config);
-		}
-
-		async animate(node: AnimNode | null, reverse?: boolean): Promise<AnimNode | null> {
-			if (!this.animHead) {
-				return null;
-			}
-
-			let innerNode = node ? node : this.animHead;
-
-			await this.apply(innerNode);
-
-			if (innerNode.config.isStoppable) {
-				return innerNode;
-			}
-
-			return reverse ? this.animate(innerNode.prev) : this.animate(innerNode.next);
-		}
-	}
+	};
 
 	function onresize() {
 		if (camera) {
@@ -146,14 +233,32 @@
 		renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	/*
-	onMount(async () => {
-		const animation = new AnimController();
-		steps.forEach((step) => animation.insertNode(step));
+	let animController: AnimController<StepProps> | null = null;
+	let stoppedAt: AnimNode<StepProps> | null = null;
 
-		await animation.animate(null);
+	async function next() {
+		if (animController) stoppedAt = await animController.animate(stoppedAt, true);
+	}
+
+	async function prev() {
+		if (animController) stoppedAt = await animController.animate(stoppedAt, true);
+	}
+
+	$effect(() => {
+		switch (animState) {
+			case 'next':
+				next();
+				break;
+			case 'prev':
+				prev();
+				break;
+		}
 	});
-    */
+
+	onMount(() => {
+		animController = new AnimController<StepProps>(applyState);
+		steps.forEach((step) => animController!.insertNode(step));
+	});
 </script>
 
 <svelte:window {onscroll} {onresize} />

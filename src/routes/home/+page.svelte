@@ -1,161 +1,22 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
-	import Model, { AnimController, type AnimConfig, type AnimNode } from './Model.svelte';
+	import Model from './Model.svelte';
 	import { onMount } from 'svelte';
 
-	const steps: AnimConfig[] = [
-		// lights on
-		{
-			dirLight: {
-				position: { x: 0, y: 10, z: -10 },
-				intensity: 0
-			},
-			camera: {
-				fov: 20,
-				position: { x: 0, y: 1, z: 12 },
-				lookAt: { x: 0, y: 1, z: 0 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 2000,
-			isStoppable: false
-		},
-		// lights stay on
-		{
-			dirLight: {
-				position: { x: 0, y: 10, z: -10 },
-				intensity: 1
-			},
-			camera: {
-				fov: 20,
-				position: { x: 0, y: 1, z: 12 },
-				lookAt: { x: 0, y: 1, z: 0 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 2000,
-			isStoppable: true
-		},
-		// lights off
-		{
-			dirLight: {
-				position: { x: 0, y: 10, z: -10 },
-				intensity: 0
-			},
-			camera: {
-				fov: 20,
-				position: { x: 0, y: 1, z: 12 }
-				// lookAt: { x: 2, y: 0, z: 0 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 1500,
-			isStoppable: false
-		},
-		// rotate slightly towards headlights with increased fov
-		{
-			dirLight: {
-				position: { x: -10, y: 5, z: 3 },
-				intensity: 0
-			},
-			camera: {
-				fov: 20,
-				position: { x: 4, y: 1, z: 10 },
-				lookAt: { x: -2, y: 1, z: 2 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 500,
-			isStoppable: false
-		},
-		// lights on and rotate towards headlights
-		{
-			dirLight: {
-				position: { x: 10, y: 10, z: 3 },
-				intensity: 5
-			},
-			camera: {
-				fov: 20,
-				position: { x: 5, y: 1, z: 10 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 2500,
-			isStoppable: true
-		},
-		// rotate more while turning the lights off
-		{
-			dirLight: {
-				position: { x: -10, y: 5, z: 3 },
-				intensity: 0
-			},
-			camera: {
-				fov: 20,
-				position: { x: 5, y: 1, z: 8 },
-				lookAt: { x: 5, y: 1, z: 10 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 1500,
-			isStoppable: false
-		},
-		// move towards rear lights
-		{
-			dirLight: {
-				position: { x: 5, y: 10, z: 3 },
-				intensity: 8
-			},
-			camera: {
-				fov: 20,
-				position: { x: 0, y: 1.5, z: -12 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 4000,
-			isStoppable: true
-		},
-		// slowly turn lights off
-		{
-			dirLight: {
-				position: { x: 0, y: 5, z: 5 },
-				intensity: 0
-			},
-			camera: {
-				fov: 15,
-				position: { x: 0, y: 1.5, z: -12 },
-				lookAt: { x: 0, y: 1, z: 0 }
-			},
-			model: {
-				rotation: { x: 0, y: 0, z: 0 }
-			},
-			duration: 2500,
-			isStoppable: false
-		}
-	];
+	let animState: 'next' | 'prev' = 'next';
 
 	onMount(() => {
-		const animController = new AnimController();
-		steps.forEach((step) => animController.insertNode(step));
-		let stoppedAt: AnimNode | null = null;
-
 		const triggers = document.querySelectorAll('#anim-trigger');
 		const observer = new IntersectionObserver(
 			(events) => {
 				events.forEach(async (event) => {
 					if (event.isIntersecting) {
 						if (event.boundingClientRect.top < 0) {
-							stoppedAt = await animController.animate(stoppedAt, true);
+							animState = 'prev';
 							return;
 						}
 
-						stoppedAt = await animController.animate(stoppedAt, true);
+						animState = 'next';
 					}
 				});
 			},
@@ -225,7 +86,7 @@
 
 <div class="canvas">
 	<Canvas>
-		<Model />
+		<Model {animState} />
 	</Canvas>
 </div>
 
