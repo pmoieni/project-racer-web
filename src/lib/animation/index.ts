@@ -13,7 +13,8 @@ export class AnimController<T> {
 	private animHead: AnimNode<T> | null = null;
 	private onAnimate: (config: AnimConfig<T>) => Promise<void>;
 
-	constructor(onAnimate: (config: AnimConfig<T>) => Promise<void>) {
+	constructor(initialSteps: AnimConfig<T>[], onAnimate: (config: AnimConfig<T>) => Promise<void>) {
+		initialSteps.forEach((step) => this.insertNode(step));
 		this.onAnimate = onAnimate;
 	}
 

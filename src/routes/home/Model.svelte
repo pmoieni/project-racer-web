@@ -7,12 +7,6 @@
 	import { Tween } from 'svelte/motion';
 	import { DoubleSide, type PerspectiveCamera } from 'three';
 
-	interface Props {
-		animState: 'next' | 'prev';
-	}
-
-	const { animState }: Props = $props();
-
 	const { renderer } = useThrelte();
 
 	// camera
@@ -233,32 +227,21 @@
 		renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	let animController: AnimController<StepProps> | null = null;
+	const animController = new AnimController<StepProps>(steps, applyState);
 	let stoppedAt: AnimNode<StepProps> | null = null;
 
-	async function next() {
-		if (animController) stoppedAt = await animController.animate(stoppedAt, true);
-	}
-
-	async function prev() {
-		if (animController) stoppedAt = await animController.animate(stoppedAt, true);
-	}
-
-	$effect(() => {
-		switch (animState) {
-			case 'next':
-				next();
-				break;
-			case 'prev':
-				prev();
-				break;
-		}
-	});
-
 	onMount(() => {
-		animController = new AnimController<StepProps>(applyState);
-		steps.forEach((step) => animController!.insertNode(step));
+		animController.animate(null);
 	});
+
+	export async function animate() {
+		console.log('animating');
+		if (animController) stoppedAt = await animController.animate(stoppedAt);
+	}
+
+	export async function animateReverse() {
+		if (animController) stoppedAt = await animController.animate(stoppedAt, true);
+	}
 </script>
 
 <svelte:window {onscroll} {onresize} />

@@ -3,20 +3,22 @@
 	import Model from './Model.svelte';
 	import { onMount } from 'svelte';
 
-	let animState: 'next' | 'prev' = 'next';
+	let model: ReturnType<typeof Model>;
 
 	onMount(() => {
 		const triggers = document.querySelectorAll('#anim-trigger');
 		const observer = new IntersectionObserver(
 			(events) => {
 				events.forEach(async (event) => {
-					if (event.isIntersecting) {
-						if (event.boundingClientRect.top < 0) {
-							animState = 'prev';
-							return;
-						}
+					if (model) {
+						if (event.isIntersecting) {
+							if (event.boundingClientRect.top < 0) {
+								model.animateReverse();
+								return;
+							}
 
-						animState = 'next';
+							model.animate();
+						}
 					}
 				});
 			},
@@ -86,7 +88,7 @@
 
 <div class="canvas">
 	<Canvas>
-		<Model {animState} />
+		<Model bind:this={model} />
 	</Canvas>
 </div>
 
