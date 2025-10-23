@@ -52,6 +52,7 @@
 		"@threlte/extras": "^9.5.4",
 		"@threlte/studio": "^0.1.8",
 		"@types/three": "^0.180.0",
+		"gsap": "^3.13.0",
 		"three": "^0.180.0"
 	}
 }

@@ -1,94 +1,252 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
-	import Model from './Model.svelte';
+	import Model from './components/Model.svelte';
+	import gsap from 'gsap';
 	import { onMount } from 'svelte';
+	import { ScrollTrigger } from 'gsap/all';
 
-	let model: ReturnType<typeof Model>;
+	gsap.registerPlugin(ScrollTrigger);
+
+	let modelState = $state({
+		camFOV: 20,
+		camPosX: 0,
+		camPosY: 0,
+		camPosZ: 6,
+		dirLightPosX: -10,
+		dirLightPosY: 10,
+		dirLightPosZ: -5,
+		dirLightIntensity: 0,
+		dirLightColor: '#ffffff',
+		dirLight2PosX: 5,
+		dirLight2PosY: 5,
+		dirLight2PosZ: -5,
+		dirLight2Intensity: 0,
+		dirLight2Color: '#eb5b00',
+		rotationX: 0,
+		rotationY: 0,
+		rotationZ: 0
+	});
 
 	onMount(() => {
-		const triggers = document.querySelectorAll('#anim-trigger');
-		const observer = new IntersectionObserver(
-			(events) => {
-				events.forEach(async (event) => {
-					if (model) {
-						if (event.isIntersecting) {
-							if (event.boundingClientRect.top < 0) {
-								model.animateReverse();
-								return;
-							}
+		// initial animation
+		const tl = gsap.timeline();
 
-							model.animate();
-						}
-					}
+		tl.to(modelState, {
+			duration: 1.5,
+			ease: 'power4',
+			camPosY: 1,
+			camPosZ: 12,
+			dirLightIntensity: 5,
+			dirLight2Intensity: 5
+		})
+			.to(modelState, {
+				duration: 1.5,
+				ease: 'power4',
+				camFOV: 24,
+				camPosX: -4,
+				camPosY: 1.5,
+				camPosZ: 12,
+				rotationY: -Math.PI / 4,
+				onComplete: () => {
+					tl.set(modelState, { rotationY: -Math.PI / 4 });
+				}
+			})
+			.to(
+				modelState,
+				{
+					duration: 1.5,
+					ease: 'power4',
+					dirLightPosX: -3,
+					dirLightPosY: 3,
+					dirLightPosZ: 5
+				},
+				'-=1'
+			)
+			.to(
+				'.heading-con',
+				{
+					duration: 1,
+					ease: 'power4',
+					translateY: '0',
+					opacity: 1
+				},
+				'<'
+			)
+			.to(
+				'.download-con',
+				{
+					duration: 1,
+					delay: 0.5,
+					ease: 'power4',
+					translateY: '0',
+					opacity: 1
+				},
+				'<'
+			);
+
+		ScrollTrigger.create({
+			trigger: '.scroll_trigger_1',
+			start: 'top top',
+			pin: true,
+			onEnter: () => {
+				gsap.to(modelState, { camPosX: 0, rotationY: -Math.PI / 2, camFOV: 35 });
+			},
+			onLeaveBack: () => {
+				gsap.to(modelState, { camPosX: -4, rotationY: -Math.PI / 4, camFOV: 24 });
+			}
+		});
+
+		gsap
+			.timeline({
+				scrollTrigger: {
+					trigger: '.scroll_trigger_2',
+					pin: true,
+					scrub: 2
+				}
+			})
+			.to('.second_car', { top: 0 })
+			.to('.third_car', { top: 0 });
+
+		ScrollTrigger.create({
+			trigger: '.footer',
+			onEnter: () => {
+				gsap.to(modelState, {
+					duration: 1.5,
+					ease: 'power4',
+					rotationY: -Math.PI,
+					camPosX: 0,
+					camFOV: 25,
+					dirLightIntensity: 2,
+					dirLightPosX: 0,
+					dirLightPosY: 5,
+					dirLightPosZ: 5,
+					dirLight2Intensity: 0
 				});
 			},
-			{ threshold: 0.8 }
-		);
-		triggers.forEach((t) => {
-			if (t) observer.observe(t);
+			onLeaveBack: () => {
+				gsap.to(modelState, {
+					duration: 1.5,
+					ease: 'power4',
+					rotationY: -Math.PI / 2,
+					camPosX: 0,
+					camFOV: 35,
+					dirLightIntensity: 5,
+					dirLightPosX: -3,
+					dirLightPosY: 3,
+					dirLightPosZ: 5,
+					dirLight2Intensity: 5
+				});
+			}
 		});
 	});
 </script>
 
-<main>
-	<section class="relative p-10">
-		<div class="h-full">background video</div>
-		<h1 class="absolute top-0 left-0 heading">Lights out.<br />Race on!</h1>
+<main class="overflow-y-hidden">
+	<section id="anim-trigger" class="relative">
+		<div class="heading-con absolute top-20 left-20 translate-y-8 leading-none opacity-0">
+			<h4 class="text-primary">Realistic Sim</h4>
+			<br />
+			<h1 class="font-bold text-primary">In Your Pocket!</h1>
+		</div>
+		<div class="download-con absolute top-96 left-20 flex translate-y-8 flex-col opacity-0">
+			<h5 class="pb-4 font-bold text-base-content uppercase">download now</h5>
+			<div class="flex flex-wrap space-y-4 space-x-4">
+				<a><img class="h-auto w-56" src="/gplay_banner.png" /></a>
+				<a><img class="h-auto w-56" src="/appstore_banner.png" /></a>
+			</div>
+		</div>
 	</section>
-	<section id="anim-trigger" class="bg-amber-100">
-		<h2 class="heading">Authentic Physics</h2>
-		<p>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-			nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-			blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-			numquam recusandae, tenetur odio nisi, sunt et eaque, id nostrum alias dolorum. Illum autem
-			maiores amet aperiam delectus blanditiis dolores molestiae. Lorem ipsum dolor sit, amet
-			consectetur adipisicing elit. A numquam recusandae, tenetur odio nisi, sunt et eaque, id
-			nostrum alias dolorum. Illum autem maiores amet aperiam delectus blanditiis dolores molestiae.
-		</p>
+	<section class="px-10 py-5">
+		<div
+			class="physics-section-con flex h-full w-full flex-col items-start justify-end rounded-4xl bg-cover bg-center bg-no-repeat p-10"
+			style="background-image: url('/images/NM1_2.png');"
+		>
+			<h2 class="font-bold text-primary">Authentic Physics</h2>
+			<p class="max-w-2xl indent-8 text-primary-content">
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
+				nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
+				blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
+				numquam recusandae.
+			</p>
+		</div>
 	</section>
-	<section>
-		<h2 class="heading">Variety of Cars</h2>
-		<p>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-			nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-			blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-			numquam recusandae, tenetur odio nisi, sunt et eaque, id nostrum alias dolorum. Illum autem
-			maiores amet aperiam delectus blanditiis dolores molestiae. Lorem ipsum dolor sit, amet
-			consectetur adipisicing elit. A numquam recusandae, tenetur odio nisi, sunt et eaque, id
-			nostrum alias dolorum. Illum autem maiores amet aperiam delectus blanditiis dolores molestiae.
-		</p>
+	<section class="scroll_trigger_1 relative">
+		<h2 class="absolute top-20 left-1/2 -translate-x-1/2 font-bold text-primary">
+			Variety of Cars
+		</h2>
 	</section>
-	<section id="anim-trigger" class="bg-amber-100">
-		<h2 class="heading">Licensed tracks</h2>
-		<p>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-			nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-			blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-			numquam recusandae, tenetur odio nisi, sunt et eaque, id nostrum alias dolorum. Illum autem
-			maiores amet aperiam delectus blanditiis dolores molestiae. Lorem ipsum dolor sit, amet
-			consectetur adipisicing elit. A numquam recusandae, tenetur odio nisi, sunt et eaque, id
-			nostrum alias dolorum. Illum autem maiores amet aperiam delectus blanditiis dolores molestiae.
-		</p>
+	<section class="scroll_trigger_2 relative">
+		<div
+			class="first_car absolute top-0 left-0 h-full w-full overflow-hidden bg-cover bg-center bg-no-repeat"
+			style="background-image: url('/images/NM1_garage.webp');"
+		>
+			<div
+				class="flex h-full w-full flex-col items-start justify-end bg-linear-to-t from-base-300 to-transparent p-10 text-base-content"
+			>
+				<h3>NM1</h3>
+			</div>
+		</div>
+		<div
+			class="second_car absolute top-full left-0 h-full w-full overflow-hidden bg-cover bg-center bg-no-repeat"
+			style="background-image: url('/images/MD10_garage.webp');"
+		>
+			<div
+				class="flex h-full w-full flex-col items-start justify-end bg-linear-to-t from-base-300 to-transparent p-10 text-base-content"
+			>
+				<h3>MD10</h3>
+			</div>
+		</div>
+		<div
+			class="third_car absolute top-full left-0 h-full w-full overflow-hidden bg-cover bg-center bg-no-repeat"
+			style="background-image: url('/images/V29F_garage.webp');"
+		>
+			<div
+				class="flex h-full w-full flex-col items-start justify-end bg-linear-to-t from-base-300 to-transparent p-10 text-base-content"
+			>
+				<h3>V29F</h3>
+			</div>
+		</div>
 	</section>
-	<section>
-		<h2 class="heading">Ranked multiplayer</h2>
-		<p>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-			nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-			blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-			numquam recusandae, tenetur odio nisi, sunt et eaque, id nostrum alias dolorum. Illum autem
-			maiores amet aperiam delectus blanditiis dolores molestiae. Lorem ipsum dolor sit, amet
-			consectetur adipisicing elit. A numquam recusandae, tenetur odio nisi, sunt et eaque, id
-			nostrum alias dolorum. Illum autem maiores amet aperiam delectus blanditiis dolores molestiae.
-		</p>
+	<section
+		class="bg-cover bg-fixed bg-center bg-no-repeat"
+		style="background-image: url('/images/clark.jpg');"
+	>
+		<div
+			class="flex h-full w-full flex-col items-start justify-end bg-linear-to-t from-base-300 to-transparent p-10"
+		>
+			<h1 class="font-bold text-primary">Licensed tracks</h1>
+			<p class="text-base-content">
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
+				nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
+				blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
+				numquam recusandae,
+			</p>
+		</div>
 	</section>
+	<section class="footer h-full w-full"><h1 class="text-base-content">FOOTER</h1></section>
 </main>
-<footer id="footer">CONTACT INFO</footer>
 
 <div class="canvas">
 	<Canvas>
-		<Model bind:this={model} />
+		<Model
+			camFOV={modelState.camFOV}
+			camPosX={modelState.camPosX}
+			camPosY={modelState.camPosY}
+			camPosZ={modelState.camPosZ}
+			dirLightPosX={modelState.dirLightPosX}
+			dirLightPosY={modelState.dirLightPosY}
+			dirLightPosZ={modelState.dirLightPosZ}
+			dirLightIntensity={modelState.dirLightIntensity}
+			dirLightColor={modelState.dirLightColor}
+			dirLight2PosX={modelState.dirLight2PosX}
+			dirLight2PosY={modelState.dirLight2PosY}
+			dirLight2PosZ={modelState.dirLight2PosZ}
+			dirLight2Intensity={modelState.dirLight2Intensity}
+			dirLight2Color={modelState.dirLight2Color}
+			rotationX={modelState.rotationX}
+			rotationY={modelState.rotationY}
+			rotationZ={modelState.rotationZ}
+		/>
 	</Canvas>
 </div>
 

@@ -13,6 +13,8 @@ export class AnimController<T> {
 	private animHead: AnimNode<T> | null = null;
 	private onAnimate: (config: AnimConfig<T>) => Promise<void>;
 
+	currNode: AnimNode<T> | null = null;
+
 	constructor(initialSteps: AnimConfig<T>[], onAnimate: (config: AnimConfig<T>) => Promise<void>) {
 		initialSteps.forEach((step) => this.insertNode(step));
 		this.onAnimate = onAnimate;
@@ -64,19 +66,39 @@ export class AnimController<T> {
 		if (this.onAnimate) await this.onAnimate(config);
 	}
 
-	async animate(node: AnimNode<T> | null, reverse?: boolean): Promise<AnimNode<T> | null> {
-		if (!this.animHead) {
-			return null;
+	async animate() {
+		if (!this.animHead) return;
+
+		if (!this.currNode) {
+			this.currNode = this.animHead;
 		}
 
-		const innerNode = node ? node : this.animHead;
+		await this.apply(this.currNode);
 
-		await this.apply(innerNode);
+		if (!this.currNode.next) return;
 
-		if (innerNode.config.isStoppable) {
-			return innerNode;
+		this.currNode = this.currNode.next;
+
+		if (this.currNode.config.isStoppable) return;
+
+		await this.animate();
+	}
+
+	async animateReverse() {
+		if (!this.animHead) return;
+
+		if (!this.currNode) {
+			this.currNode = this.animHead;
 		}
 
-		return reverse ? this.animate(innerNode.prev) : this.animate(innerNode.next);
+		await this.apply(this.currNode);
+
+		if (!this.currNode.prev) return;
+
+		this.currNode = this.currNode.prev;
+
+		if (this.currNode.config.isStoppable) return;
+
+		await this.animateReverse();
 	}
 }
