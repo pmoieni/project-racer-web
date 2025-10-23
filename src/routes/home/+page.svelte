@@ -29,16 +29,17 @@
 
 	onMount(() => {
 		// initial animation
-		const tl = gsap.timeline();
 
-		tl.to(modelState, {
-			duration: 1.5,
-			ease: 'power4',
-			camPosY: 1,
-			camPosZ: 12,
-			dirLightIntensity: 5,
-			dirLight2Intensity: 5
-		})
+		gsap
+			.timeline()
+			.to(modelState, {
+				duration: 1.5,
+				ease: 'power4',
+				camPosY: 1,
+				camPosZ: 12,
+				dirLightIntensity: 5,
+				dirLight2Intensity: 5
+			})
 			.to(modelState, {
 				duration: 1.5,
 				ease: 'power4',
@@ -46,10 +47,7 @@
 				camPosX: -4,
 				camPosY: 1.5,
 				camPosZ: 12,
-				rotationY: -Math.PI / 4,
-				onComplete: () => {
-					tl.set(modelState, { rotationY: -Math.PI / 4 });
-				}
+				rotationY: -Math.PI / 4
 			})
 			.to(
 				modelState,
@@ -141,7 +139,7 @@
 	});
 </script>
 
-<main class="overflow-y-hidden">
+<main class="w-full">
 	<section id="anim-trigger" class="relative">
 		<div class="heading-con absolute top-20 left-20 translate-y-8 leading-none opacity-0">
 			<h4 class="text-primary">Realistic Sim</h4>
