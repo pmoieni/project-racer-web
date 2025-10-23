@@ -159,7 +159,7 @@
 	<section class="px-10 py-5">
 		<div
 			class="physics-section-con flex h-full w-full flex-col items-start justify-end rounded-4xl bg-cover bg-center bg-no-repeat p-10"
-			style="background-image: url('/images/NM1_2.png');"
+			style="background-image: url('/images/V29F_1.webp');"
 		>
 			<h2 class="font-bold text-primary">Authentic Physics</h2>
 			<p class="max-w-2xl indent-8 text-primary-content">
