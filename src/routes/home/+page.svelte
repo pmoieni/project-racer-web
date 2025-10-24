@@ -59,30 +59,36 @@
 					dirLightPosZ: 5
 				},
 				'-=1'
-			);
-		/*
-			.to(
+			)
+			.fromTo(
 				'.heading-con',
+				{
+					y: 10,
+					opacity: 0
+				},
 				{
 					duration: 1,
 					ease: 'power4',
-					translateY: '0',
+					y: 2,
 					opacity: 1
 				},
 				'<'
 			)
-			.to(
+			.fromTo(
 				'.download-con',
+				{
+					y: 10,
+					opacity: 0
+				},
 				{
 					duration: 1,
 					delay: 0.5,
 					ease: 'power4',
-					translateY: '0',
+					y: 0,
 					opacity: 1
 				},
 				'<'
 			);
-			*/
 
 		ScrollTrigger.create({
 			trigger: '.scroll_trigger_1',
@@ -144,7 +150,7 @@
 <main class="w-full">
 	<section class="flex flex-col px-5 py-10 md:p-20">
 		<div class="heading-con flex h-full w-full flex-col items-center leading-none md:items-start">
-			<h3 class="text-left text-primary">Realistic Sim</h3>
+			<h3 class="opa text-left text-primary">Realistic Sim</h3>
 			<br />
 			<h1 class="text-center font-bold text-primary">In Your Pocket!</h1>
 		</div>
@@ -160,7 +166,7 @@
 			</div>
 		</div>
 	</section>
-	<section class="m:py-5 m:px-10">
+	<section class="p-0 md:p-5 md:px-10">
 		<div
 			class="physics-section-con flex h-full w-full flex-col items-start justify-end bg-cover bg-center bg-no-repeat p-10 md:rounded-4xl"
 			style="background-image: url('/images/V29F_1.webp');"
