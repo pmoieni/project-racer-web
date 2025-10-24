@@ -89,6 +89,7 @@ Command: npx @threlte/gltf@3.0.1 Zzeit.glb --transform --draco true
 				geometry={gltf.nodes.body.geometry}
 				material={gltf.materials.paintMain}
 				position={[0, 0.19, 0]}
+				castShadow
 			>
 				<T.Mesh
 					name="head_lights"

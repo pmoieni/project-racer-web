@@ -59,7 +59,8 @@
 					dirLightPosZ: 5
 				},
 				'-=1'
-			)
+			);
+		/*
 			.to(
 				'.heading-con',
 				{
@@ -81,6 +82,7 @@
 				},
 				'<'
 			);
+			*/
 
 		ScrollTrigger.create({
 			trigger: '.scroll_trigger_1',
@@ -140,38 +142,38 @@
 </script>
 
 <main class="w-full">
-	<section id="anim-trigger" class="relative">
-		<div class="heading-con absolute top-20 left-20 translate-y-8 leading-none opacity-0">
-			<h4 class="text-primary">Realistic Sim</h4>
+	<section class="flex flex-col px-5 py-10 md:p-20">
+		<div class="heading-con flex h-full w-full flex-col items-center leading-none md:items-start">
+			<h3 class="text-left text-primary">Realistic Sim</h3>
 			<br />
-			<h1 class="font-bold text-primary">In Your Pocket!</h1>
+			<h1 class="text-center font-bold text-primary">In Your Pocket!</h1>
 		</div>
-		<div class="download-con absolute top-96 left-20 flex translate-y-8 flex-col opacity-0">
-			<h5 class="pb-4 font-bold text-base-content uppercase">download now</h5>
-			<div class="flex flex-wrap space-y-4 space-x-4">
+		<div
+			class="download-con flex h-full w-full flex-col items-center justify-center md:items-start"
+		>
+			<p class="pb-4 font-bold text-base-content uppercase">download now</p>
+			<div
+				class="flex flex-col items-center justify-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"
+			>
 				<a><img class="h-auto w-56" src="/gplay_banner.png" /></a>
 				<a><img class="h-auto w-56" src="/appstore_banner.png" /></a>
 			</div>
 		</div>
 	</section>
-	<section class="px-10 py-5">
+	<section class="m:py-5 m:px-10">
 		<div
-			class="physics-section-con flex h-full w-full flex-col items-start justify-end rounded-4xl bg-cover bg-center bg-no-repeat p-10"
+			class="physics-section-con flex h-full w-full flex-col items-start justify-end bg-cover bg-center bg-no-repeat p-10 md:rounded-4xl"
 			style="background-image: url('/images/V29F_1.webp');"
 		>
 			<h2 class="font-bold text-primary">Authentic Physics</h2>
 			<p class="max-w-2xl indent-8 text-primary-content">
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-				nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-				blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-				numquam recusandae.
+				nisi, sunt et eaque, id nostrum alias dolorum.
 			</p>
 		</div>
 	</section>
 	<section class="scroll_trigger_1 relative">
-		<h2 class="absolute top-20 left-1/2 -translate-x-1/2 font-bold text-primary">
-			Variety of Cars
-		</h2>
+		<h1 class="text-center font-bold text-primary">Variety of Cars</h1>
 	</section>
 	<section class="scroll_trigger_2 relative">
 		<div
@@ -215,9 +217,7 @@
 			<h1 class="font-bold text-primary">Licensed tracks</h1>
 			<p class="text-base-content">
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. A numquam recusandae, tenetur odio
-				nisi, sunt et eaque, id nostrum alias dolorum. Illum autem maiores amet aperiam delectus
-				blanditiis dolores molestiae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. A
-				numquam recusandae,
+				nisi, sunt et eaque, id nostrum alias dolorum.
 			</p>
 		</div>
 	</section>
