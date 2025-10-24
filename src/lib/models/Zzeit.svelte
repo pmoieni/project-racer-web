@@ -4,123 +4,88 @@ Command: npx @threlte/gltf@3.0.1 Zzeit.glb --transform --draco true
 -->
 
 <script>
-	import { Group } from 'three';
-
 	import { T } from '@threlte/core';
-	import { useGltf, useGltfAnimations, useDraco } from '@threlte/extras';
+	import { useGltf, useDraco } from '@threlte/extras';
 
 	let { fallback, error, children, ref = $bindable(), ...props } = $props();
 
-	ref = new Group();
-
 	const gltf = useGltf('/Zzeit-transformed.glb', { dracoLoader: useDraco() });
-
-	export const { actions, mixer } = useGltfAnimations(gltf, ref);
 </script>
 
-<T is={ref} dispose={false} {...props}>
+<T.Group bind:ref dispose={false} {...props}>
 	{#await gltf}
 		{@render fallback?.()}
 	{:then gltf}
-		<T.Group name="Scene">
-			<T.Group name="mainempty" position={[0, 3.26, 0]} scale={1.72}>
-				<T.Mesh
-					name="tyreflring"
-					geometry={gltf.nodes.tyreflring.geometry}
-					material={gltf.materials['rim_vertica.004']}
-					position={[1.09, -1.46, 1.89]}
-					rotation={[0, 0, 0.06]}
-					scale={1.46}
-				>
-					<T.Mesh
-						name="tyreflrubber"
-						geometry={gltf.nodes.tyreflrubber.geometry}
-						material={gltf.materials['04 - Default.004']}
-						position={[-0.75, -0.25, -1.3]}
-					/>
-				</T.Mesh>
-				<T.Mesh
-					name="tyrefrring"
-					geometry={gltf.nodes.tyrefrring.geometry}
-					material={gltf.materials['rim_vertica.004']}
-					position={[-1.15, -1.43, 1.89]}
-					rotation={[0, 0, 3.08]}
-					scale={1.46}
-				>
-					<T.Mesh
-						name="tyrefrrubber"
-						geometry={gltf.nodes.tyrefrrubber.geometry}
-						material={gltf.materials['04 - Default.004']}
-						position={[-0.79, 0.24, -1.3]}
-					/>
-				</T.Mesh>
-				<T.Mesh
-					name="tyrerlring"
-					geometry={gltf.nodes.tyrerlring.geometry}
-					material={gltf.materials['rim_vertica.004']}
-					position={[1.14, -1.45, -1.34]}
-					scale={1.46}
-				>
-					<T.Mesh
-						name="tyrerlrubber"
-						geometry={gltf.nodes.tyrerlrubber.geometry}
-						material={gltf.materials['04 - Default.004']}
-						position={[-0.78, -0.25, 0.92]}
-					/>
-				</T.Mesh>
-				<T.Mesh
-					name="tyrerrring"
-					geometry={gltf.nodes.tyrerrring.geometry}
-					material={gltf.materials['rim_vertica.004']}
-					position={[-1.19, -1.46, -1.34]}
-					rotation={[0, 0, -Math.PI]}
-					scale={1.46}
-				>
-					<T.Mesh
-						name="tyrerrrubber"
-						geometry={gltf.nodes.tyrerrrubber.geometry}
-						material={gltf.materials['04 - Default.004']}
-						position={[-0.82, 0.24, 0.92]}
-					/>
-				</T.Mesh>
-			</T.Group>
+		<T.Group position={[0, 3.26, 0]} scale={1.72}>
 			<T.Mesh
-				name="body"
-				geometry={gltf.nodes.body.geometry}
-				material={gltf.materials.paintMain}
-				position={[0, 0.19, 0]}
-				castShadow
+				geometry={gltf.nodes.tyreflring.geometry}
+				material={gltf.materials['rim_vertica.004']}
+				position={[1.09, -1.46, 1.89]}
+				rotation={[0, 0, 0.06]}
+				scale={1.46}
 			>
 				<T.Mesh
-					name="head_lights"
-					geometry={gltf.nodes.head_lights.geometry}
-					material={gltf.materials.wire_000000000}
+					geometry={gltf.nodes.tyreflrubber.geometry}
+					material={gltf.materials['04 - Default.004']}
+					position={[-0.75, -0.25, -1.3]}
 				/>
+			</T.Mesh>
+			<T.Mesh
+				geometry={gltf.nodes.tyrefrring.geometry}
+				material={gltf.materials['rim_vertica.004']}
+				position={[-1.15, -1.43, 1.89]}
+				rotation={[0, 0, 3.08]}
+				scale={1.46}
+			>
 				<T.Mesh
-					name="interior"
-					geometry={gltf.nodes.interior.geometry}
-					material={gltf.materials.paintMain}
+					geometry={gltf.nodes.tyrefrrubber.geometry}
+					material={gltf.materials['04 - Default.004']}
+					position={[-0.79, 0.24, -1.3]}
 				/>
+			</T.Mesh>
+			<T.Mesh
+				geometry={gltf.nodes.tyrerlring.geometry}
+				material={gltf.materials['rim_vertica.004']}
+				position={[1.14, -1.45, -1.34]}
+				scale={1.46}
+			>
 				<T.Mesh
-					name="lights_side"
-					geometry={gltf.nodes.lights_side.geometry}
-					material={gltf.materials.wire_000000000}
+					geometry={gltf.nodes.tyrerlrubber.geometry}
+					material={gltf.materials['04 - Default.004']}
+					position={[-0.78, -0.25, 0.92]}
 				/>
+			</T.Mesh>
+			<T.Mesh
+				geometry={gltf.nodes.tyrerrring.geometry}
+				material={gltf.materials['rim_vertica.004']}
+				position={[-1.19, -1.46, -1.34]}
+				rotation={[0, 0, -Math.PI]}
+				scale={1.46}
+			>
 				<T.Mesh
-					name="tail_lights"
-					geometry={gltf.nodes.tail_lights.geometry}
-					material={gltf.materials['12___Car_Paint']}
-				/>
-				<T.Mesh
-					name="windows"
-					geometry={gltf.nodes.windows.geometry}
-					material={gltf.materials.phong1SG}
+					geometry={gltf.nodes.tyrerrrubber.geometry}
+					material={gltf.materials['04 - Default.004']}
+					position={[-0.82, 0.24, 0.92]}
 				/>
 			</T.Mesh>
 		</T.Group>
+		<T.Mesh
+			geometry={gltf.nodes.body.geometry}
+			material={gltf.materials.paintMain}
+			position={[0, 0.19, 0]}
+			castShadow
+		>
+			<T.Mesh geometry={gltf.nodes.head_lights.geometry} material={gltf.materials.wire_000000000} />
+			<T.Mesh geometry={gltf.nodes.lights_side.geometry} material={gltf.materials.wire_000000000} />
+			<T.Mesh
+				geometry={gltf.nodes.tail_lights.geometry}
+				material={gltf.materials['12___Car_Paint']}
+			/>
+			<T.Mesh geometry={gltf.nodes.windows.geometry} material={gltf.materials.phong1SG} />
+		</T.Mesh>
 	{:catch err}
 		{@render error?.({ error: err })}
 	{/await}
 
 	{@render children?.({ ref })}
-</T>
+</T.Group>

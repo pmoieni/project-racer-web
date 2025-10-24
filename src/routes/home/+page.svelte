@@ -225,7 +225,7 @@
 </main>
 
 <div class="canvas">
-	<Canvas>
+	<Canvas dpr={1.5}>
 		<Model
 			camFOV={modelState.camFOV}
 			camPosX={modelState.camPosX}

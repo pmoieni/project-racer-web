@@ -31,7 +31,12 @@
 <svelte:window on:resize={onResize} on:scroll={onScroll} />
 
 {#if showMobileNav}
-	<nav>DAMN BRUH</nav>
+	<nav
+		class="sticky top-0 left-0 z-10 w-full transition-[padding]"
+		style={detached ? navDetachedStyle : ''}
+	>
+		DAMN BRUH
+	</nav>
 {:else}
 	<nav
 		class="sticky top-0 left-0 z-10 w-full transition-[padding]"
