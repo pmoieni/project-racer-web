@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/all';
+	import Lenis from 'lenis';
 
 	gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,16 @@
 	});
 
 	onMount(() => {
+		const lenis = new Lenis();
+
+		lenis.on('scroll', ScrollTrigger.update);
+
+		gsap.ticker.add((time) => {
+			lenis.raf(time * 1000);
+		});
+
+		gsap.ticker.lagSmoothing(0);
+
 		// intro animation
 		const carAnim = gsap
 			.timeline({ paused: true })
@@ -121,7 +132,6 @@
 
 		ScrollTrigger.create({
 			trigger: '.footer',
-			start: 'top top',
 			pin: true,
 			animation: carAnim.tweenFromTo('footer', 'end'),
 			scrub: 2
