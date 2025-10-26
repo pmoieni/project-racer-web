@@ -39,6 +39,17 @@
 
 		gsap.ticker.lagSmoothing(0);
 
+		const carsCon = document.querySelector('.cars-con');
+
+		const getScrollWidth = () => {
+			if (carsCon) {
+				const carsSectionWidth = carsCon.scrollWidth;
+				return -(carsSectionWidth - window.innerWidth);
+			}
+
+			return 0;
+		};
+
 		// intro animation
 		const carAnim = gsap
 			.timeline({ paused: true })
@@ -100,12 +111,15 @@
 				},
 				'<'
 			)
-			.pause()
 			.add('display')
 			.to(modelState, {
 				camPosX: 0,
 				rotationY: -Math.PI / 2,
 				camFOV: 35
+			})
+			.add('cars')
+			.to(carsCon, {
+				x: getScrollWidth
 			})
 			.add('footer')
 			.to(modelState, {
@@ -131,34 +145,19 @@
 		});
 
 		ScrollTrigger.create({
-			trigger: '.footer',
-			pin: true,
-			animation: carAnim.tweenFromTo('footer', 'end'),
-			scrub: 2
-		});
-
-		const carsCon = document.querySelector('.cars-con');
-
-		const getScrollWidth = () => {
-			if (carsCon) {
-				const carsSectionWidth = carsCon.scrollWidth;
-				return -(carsSectionWidth - window.innerWidth);
-			}
-
-			return 0;
-		};
-
-		const carsSectionTween = gsap.to(carsCon, {
-			x: getScrollWidth
-		});
-
-		ScrollTrigger.create({
 			trigger: '.cars',
 			start: 'top top',
 			pin: true,
 			scrub: true,
-			animation: carsSectionTween,
+			animation: carAnim.tweenFromTo('cars', 'footer'),
 			invalidateOnRefresh: true
+		});
+
+		ScrollTrigger.create({
+			trigger: '.footer',
+			pin: true,
+			animation: carAnim.tweenFromTo('footer', 'end'),
+			scrub: 2
 		});
 	});
 </script>
