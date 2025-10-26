@@ -243,7 +243,9 @@
 			</p>
 		</div>
 	</section>
-	<section class="footer h-full w-full">FOOTER</section>
+	<section class="footer flex h-full w-full items-center justify-center text-base-content">
+		<h1>FOOTER</h1>
+	</section>
 </main>
 
 <div class="fixed top-0 left-0 z-[-1] h-full w-full">
