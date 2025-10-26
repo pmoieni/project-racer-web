@@ -140,7 +140,7 @@
 			trigger: '.car-display',
 			start: 'top top',
 			pin: true,
-			animation: carAnim.tweenFromTo('display', 'footer'),
+			animation: carAnim.tweenFromTo('display', 'cars'),
 			scrub: 2
 		});
 
@@ -148,7 +148,7 @@
 			trigger: '.cars',
 			start: 'top top',
 			pin: true,
-			scrub: true,
+			scrub: 2,
 			animation: carAnim.tweenFromTo('cars', 'footer'),
 			invalidateOnRefresh: true
 		});
