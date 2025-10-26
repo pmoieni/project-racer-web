@@ -155,7 +155,6 @@
 		ScrollTrigger.create({
 			trigger: '.cars',
 			start: 'top top',
-			end: () => `+=${getScrollWidth() * -1}`,
 			pin: true,
 			scrub: true,
 			animation: carsSectionTween,
