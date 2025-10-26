@@ -62,6 +62,10 @@ body {
 	overflow-x: hidden;
 }
 
+@utility no-scrollbar {
+	@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 /*
 @utility heading {
 	color: var(--color-white);

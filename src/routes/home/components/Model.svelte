@@ -6,8 +6,7 @@
 		DirectionalLight,
 		Mesh,
 		MeshStandardMaterial,
-		PerspectiveCamera,
-		WebGLRenderer
+		PerspectiveCamera
 	} from 'three';
 
 	interface Props {
@@ -50,7 +49,7 @@
 		rotationZ
 	}: Props = $props();
 
-	const renderer = new WebGLRenderer();
+	const { renderer } = useThrelte();
 
 	const camera = new PerspectiveCamera(camFOV, window.innerWidth / window.innerHeight, 1, 1000);
 

@@ -1,92 +1,86 @@
 <script lang="ts">
-	import AboutIcon from '$lib/icons/AboutIcon.svelte';
-	import ContactIcon from '$lib/icons/ContactIcon.svelte';
-	import CupIcon from '$lib/icons/CupIcon.svelte';
 	import MenuIcon from '$lib/icons/MenuIcon.svelte';
+	import gsap from 'gsap';
+	import { Observer } from 'gsap/all';
+	import { onMount } from 'svelte';
 
-	const navConDetachedClass = 'bg-base-100/75 backdrop-blur-sm';
-	const navDetachedStyle = 'padding: 1rem;';
-	let detached = false;
+	gsap.registerPlugin(Observer);
 
-	function onScroll() {
-		if (window.scrollY > 0) {
-			detached = true;
+	let displayMenu = false;
+
+	function menuBtnOnClick() {
+		if (displayMenu) {
+			displayMenu = false;
 			return;
 		}
 
-		detached = false;
+		displayMenu = true;
+
+		let navItems = gsap.utils.toArray('.menu-list-con > ul > li');
+
+		navItems.forEach((item, index) => {
+			if (item)
+				gsap.fromTo(
+					item,
+					{ opacity: 0, y: 100 },
+					{ opacity: 1, y: 0, duration: 1, delay: index * 0.2, ease: 'power4.out' }
+				);
+		});
 	}
 
-	let showMobileNav = window.innerWidth < 768;
-	function onResize() {
-		if (window.innerWidth < 768) {
-			showMobileNav = true;
-			return;
-		}
-
-		showMobileNav = false;
-	}
+	onMount(() => {
+		Observer.create({});
+	});
 </script>
 
-<svelte:window on:resize={onResize} on:scroll={onScroll} />
-
-{#if showMobileNav}
-	<nav
-		class="sticky top-0 left-0 z-10 w-full transition-[padding]"
-		style={detached ? navDetachedStyle : ''}
-	>
-		DAMN BRUH
-	</nav>
-{:else}
-	<nav
-		class="sticky top-0 left-0 z-10 w-full transition-[padding]"
-		style={detached ? navDetachedStyle : ''}
-	>
-		<div
-			class={`nav-con flex w-full items-center justify-between rounded-4xl px-5 ${detached ? navConDetachedClass : ''}`}
+<nav class="fixed z-20 flex w-full flex-nowrap items-center justify-between p-5">
+	<div class="logo">LOGO</div>
+	<div class="menu">
+		<button
+			on:click={menuBtnOnClick}
+			class=" rounded-full border-none bg-base-content p-2 pl-4 outline-none"
 		>
-			<div class="logo">Logo</div>
-			<div
-				class="links fixed top-0 left-0 flex h-full w-full items-center justify-center bg-base-300 md:static md:h-auto md:bg-transparent"
-			>
-				<ul
-					class="flex h-full w-full list-none flex-col items-center justify-center space-y-12 text-4xl text-base-content md:h-auto md:w-auto md:flex-row md:space-y-0 md:space-x-8 md:text-base"
-				>
-					<li>
-						<a class="flex items-center space-x-2">
-							<CupIcon />
-							<p>Rankings</p>
-						</a>
-					</li>
-					<li>
-						<a class="flex items-center space-x-2">
-							<ContactIcon />
-							<p>Contact us</p>
-						</a>
-					</li>
-					<li>
-						<a class="flex items-center space-x-2">
-							<AboutIcon />
-							<p>About us</p>
-						</a>
-					</li>
-				</ul>
+			<div class="flex h-full w-full flex-nowrap items-center justify-between space-x-4">
+				<p>{displayMenu ? 'Close' : 'Menu'}</p>
+				<span class="rounded-4xl bg-base-300 p-2"><MenuIcon /></span>
 			</div>
-			<div class="user">User</div>
-			<button class="menu-btn flex items-center space-x-2 text-sm text-base-content md:hidden">
-				<p>menu</p>
-				<MenuIcon />
-			</button>
-		</div>
-	</nav>
-{/if}
+		</button>
+	</div>
+</nav>
+<div
+	class={`menu-con fixed top-0 z-10 ${displayMenu ? 'left-0' : '-left-full'}  h-full w-full bg-base-300 transition-[left]`}
+>
+	<div class="menu-list-con flex h-full w-full items-center justify-center">
+		<ul>
+			<li>
+				<a
+					href=""
+					class="text-6xl font-bold tracking-wide text-base-content/50 transition-[color] hover:text-base-content"
+					>Home</a
+				>
+			</li>
+			<li>
+				<a
+					href=""
+					class="text-6xl font-bold tracking-wide text-base-content/50 transition-[color] hover:text-base-content"
+					>Rankings</a
+				>
+			</li>
+			<li>
+				<a
+					href=""
+					class="text-6xl font-bold tracking-wide text-base-content/50 transition-[color] hover:text-base-content"
+					>About</a
+				>
+			</li>
+			<li>
+				<a
+					href=""
+					class="text-6xl font-bold tracking-wide text-base-content/50 transition-[color] hover:text-base-content"
+					>Contact</a
+				>
+			</li>
+		</ul>
+	</div>
+</div>
 <slot />
-
-<style>
-	nav {
-		.logo,
-		.user {
-			margin: 1rem;
-		}
-	}
-</style>
