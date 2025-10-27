@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
-	import Model from './components/Model.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/all';
 	import Lenis from 'lenis';
+	import Model from '$lib/components/pages/home/Model.svelte';
 
 	gsap.registerPlugin(ScrollTrigger);
 
@@ -141,14 +141,14 @@
 			start: 'top top',
 			pin: true,
 			animation: carAnim.tweenFromTo('display', 'cars'),
-			scrub: 2
+			scrub: true
 		});
 
 		ScrollTrigger.create({
 			trigger: '.cars',
 			start: 'top top',
 			pin: true,
-			scrub: 2,
+			scrub: true,
 			animation: carAnim.tweenFromTo('cars', 'footer'),
 			invalidateOnRefresh: true
 		});
@@ -157,7 +157,7 @@
 			trigger: '.footer',
 			pin: true,
 			animation: carAnim.tweenFromTo('footer', 'end'),
-			scrub: 2
+			scrub: true
 		});
 	});
 </script>
