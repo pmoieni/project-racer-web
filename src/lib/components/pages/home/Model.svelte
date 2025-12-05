@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Zzeit from '$lib/models/Zzeit.svelte';
 	import { T, useThrelte } from '@threlte/core';
 	import {
 		CircleGeometry,
@@ -8,6 +7,7 @@
 		MeshStandardMaterial,
 		PerspectiveCamera
 	} from 'three';
+	import Zzeit from './Zzeit.svelte';
 
 	interface Props {
 		camFOV: number;

@@ -23,6 +23,7 @@
 	--color-error-content: oklch(27% 0.105 12.094);
 	--radius: 2rem;
 	--border-width: 1px;
+	--font-display: 'Montserrat', normal;
 }
 
 @font-face {
@@ -60,6 +61,8 @@ body {
 */
 	background-color: var(--color-base-300);
 	overflow-x: hidden;
+	width: 100vw;
+	height: 100vh;
 }
 
 @utility no-scrollbar {
